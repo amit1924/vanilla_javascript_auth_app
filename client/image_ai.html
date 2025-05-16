@@ -747,7 +747,7 @@
                   
                   <div id="chat-${file.name.replace(/[^a-z0-9]/gi, '-')}" class="chat-container flex flex-col space-y-3 mb-3 max-h-60 overflow-y-auto p-2"></div>
                   
-                  <div class="flex gap-2">
+                  <div class="flex gap-1 flex-wrap">
                     <input 
                       type="text" 
                       id="question-${file.name.replace(/[^a-z0-9]/gi, '-')}" 
@@ -756,7 +756,7 @@
                     >
                     <button 
                       onclick="askFollowUp('${file.name}')" 
-                      class="chat-send-btn rounded-lg px-4 py-2 flex items-center justify-center"
+                      class="chat-send-btn rounded-lg px-4 py-2 flex items-center justify-center "
                     >
                       <i class="fas fa-paper-plane mr-2"></i> Send
                     </button>
