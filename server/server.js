@@ -74,6 +74,9 @@ app.get("/port", protect, (req, res) => {
 app.get("/ai", protect, (req, res) => {
   res.sendFile(join(__dirname, "../client/ai_assistant.html"));
 });
+app.get("/image-ai", protect, (req, res) => {
+  res.sendFile(join(__dirname, "../client/image_ai.html"));
+});
 app.get("/music", protect, (req, res) => {
   res.redirect("https://musical-phi-one.vercel.app/");
 });

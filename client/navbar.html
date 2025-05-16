@@ -289,12 +289,12 @@
         }
         
         /* Mobile menu styles */
-        @media (max-width: 992px) {
+       @media (max-width: 992px) {
             .hamburger {
                 display: block;
             }
             
-            .nav-links, .auth-buttons {
+            .nav-links {
                 position: fixed;
                 top: var(--nav-height);
                 left: -100%;
@@ -309,25 +309,37 @@
                 -webkit-backdrop-filter: blur(10px);
                 z-index: 999;
                 height: calc(100vh - var(--nav-height));
-                justify-content: center;
-            }
-            
-            .nav-links {
-                padding-top: 3rem;
+                justify-content: flex-start;
+                overflow-y: auto;
             }
             
             .auth-buttons {
-                padding-bottom: 3rem;
-                top: calc(var(--nav-height) + 60vh);
+                position: fixed;
+                bottom: 2rem;
+                left: 0;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                padding: 0 2rem;
+                transform: translateX(-100%);
+                transition: transform var(--transition-speed) ease;
             }
             
-            .nav-links.active, .auth-buttons.active {
+            .nav-links.active {
                 left: 0;
+            }
+            
+            .auth-buttons.active {
+                transform: translateX(0);
             }
             
             .nav-links a {
                 font-size: 1.2rem;
                 padding: 1rem 2rem;
+                width: 100%;
+                text-align: center;
             }
             
             .auth-buttons a {
@@ -500,7 +512,7 @@
         </div>
     </div>
     
-    <nav>
+     <nav>
         <div class="nav-container">
             <a href="/home" class="logo animate__animated animate__fadeIn" data-link>
                 <i class="fas fa-robot"></i> Multi Apps
@@ -510,16 +522,26 @@
                 <a href="/home" class="active animate__animated animate__fadeIn" data-link>Home</a>
                 <a href="/port" class="animate__animated animate__fadeIn" data-link>Portfolio</a>
                 <a href="/ai" class="animate__animated animate__fadeIn" data-link>AI Assistant</a>
-                <a href="/music" class="animate__animated animate__fadeIn" data-link>Music App</a>
+                <a href="/image-ai" class="animate__animated animate__fadeIn" data-link>Image AI</a>
+                <!-- Moved auth buttons inside nav-links for mobile -->
+                <div class="auth-buttons" id="authButtons">
+                    <a href="/auth/login" class="login-btn animate__animated animate__fadeIn" data-link>
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="/auth/register" class="register-btn animate__animated animate__fadeIn" data-link>
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </div>
             </div>
-            <div class="auth-buttons" id="authButtons">
+            <!-- Desktop auth buttons -->
+            <!-- <div class="auth-buttons desktop-auth">
                 <a href="/auth/login" class="login-btn animate__animated animate__fadeIn" data-link>
                     <i class="fas fa-sign-in-alt"></i> Login
                 </a>
                 <a href="/auth/register" class="register-btn animate__animated animate__fadeIn" data-link>
                     <i class="fas fa-user-plus"></i> Register
                 </a>
-            </div>
+            </div> -->
         </div>
     </nav>
     
