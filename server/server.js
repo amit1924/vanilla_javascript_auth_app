@@ -75,7 +75,7 @@ app.get("/ai", protect, (req, res) => {
   res.sendFile(join(__dirname, "../client/ai_assistant.html"));
 });
 app.get("/image-ai", protect, (req, res) => {
-  res.sendFile(join(__dirname, "../client/image_ai.html"));
+  res.sendFile(join(__dirname, "../client/imageAI.html"));
 });
 app.get("/music", protect, (req, res) => {
   res.redirect("https://musical-phi-one.vercel.app/");
@@ -88,5 +88,5 @@ app.get("/", (req, res) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on this ${PORT}`);
+  console.log(`🚀 Server is running  ${PORT}`);
 });
