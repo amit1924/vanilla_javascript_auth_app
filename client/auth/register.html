@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes neon-glow {
+            0% { 
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px currentColor;
+                box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px currentColor;
+            }
+            100% { 
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px currentColor;
+                box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px currentColor;
+            }
+        }
+        @keyframes toast-in {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes toast-out {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-neon-glow {
+            animation: neon-glow 1.5s ease-in-out infinite alternate;
+        }
+        .toast {
+            animation: toast-in 0.3s ease-out forwards;
+        }
+        .toast.hide {
+            animation: toast-out 0.3s ease-in forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-4 font-sans text-gray-100 overflow-hidden">
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-3 w-80 max-w-full"></div>
+
+    <!-- Background elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-blue-500 opacity-10 mix-blend-screen animate-float"></div>
+        <div class="absolute top-1/3 right-1/4 w-40 h-40 rounded-full bg-purple-500 opacity-10 mix-blend-screen animate-float" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-48 h-48 rounded-full bg-pink-500 opacity-10 mix-blend-screen animate-float" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- Main container -->
+    <div class="relative z-10 w-full max-w-md bg-gray-800 bg-opacity-90 backdrop-blur-sm rounded-xl p-8 border border-gray-700 shadow-2xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 animate-neon-glow">
+                CREATE ACCOUNT
+            </h1>
+            <p class="text-gray-400">Join our community today</p>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="register-form" class="space-y-6">
+            <!-- Name Field -->
+            <div class="space-y-1">
+                <label for="name" class="block text-sm font-medium text-gray-300">
+                    <i class="fas fa-user mr-2 text-blue-400"></i>Full Name
+                </label>
+                <div class="relative group">
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required
+                        class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30 transition-all duration-300 text-gray-100 placeholder-gray-500"
+                        placeholder="Enter your name"
+                    >
+                    <div class="absolute inset-0 rounded-lg border border-blue-400 opacity-0 group-focus-within:opacity-100 pointer-events-none transition-opacity duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="space-y-1">
+                <label for="email" class="block text-sm font-medium text-gray-300">
+                    <i class="fas fa-envelope mr-2 text-purple-400"></i>Email Address
+                </label>
+                <div class="relative group">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30 transition-all duration-300 text-gray-100 placeholder-gray-500"
+                        placeholder="Enter your email"
+                    >
+                    <div class="absolute inset-0 rounded-lg border border-purple-400 opacity-0 group-focus-within:opacity-100 pointer-events-none transition-opacity duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="space-y-1">
+                <label for="password" class="block text-sm font-medium text-gray-300">
+                    <i class="fas fa-lock mr-2 text-pink-400"></i>Password
+                </label>
+                <div class="relative group">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        minlength="6"
+                        class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-400/30 transition-all duration-300 text-gray-100 placeholder-gray-500 pr-10"
+                        placeholder="Enter password (min 6 characters)"
+                    >
+                    <button type="button" class="absolute right-3 top-3 text-gray-400 hover:text-pink-400" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                    <div class="absolute inset-0 rounded-lg border border-pink-400 opacity-0 group-focus-within:opacity-100 pointer-events-none transition-opacity duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-bold text-white hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 flex items-center justify-center"
+            >
+                REGISTER <i class="fas fa-user-plus ml-2"></i>
+            </button>
+
+            <!-- Error message container -->
+            <div id="error-message" class="text-red-400 text-sm text-center hidden"></div>
+        </form>
+
+        <!-- Login link -->
+        <div class="mt-6 text-center text-gray-400">
+            Already have an account? 
+            <a href="/auth/login" class="text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+                Login here
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Toast notification system
+        function showToast(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            // Set toast colors based on type
+            let bgColor, borderColor, icon;
+            switch(type) {
+                case 'success':
+                    bgColor = 'bg-green-900/80';
+                    borderColor = 'border-green-400';
+                    icon = 'fa-check-circle';
+                    break;
+                case 'error':
+                    bgColor = 'bg-red-900/80';
+                    borderColor = 'border-red-400';
+                    icon = 'fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    bgColor = 'bg-yellow-900/80';
+                    borderColor = 'border-yellow-400';
+                    icon = 'fa-exclamation-triangle';
+                    break;
+                default:
+                    bgColor = 'bg-blue-900/80';
+                    borderColor = 'border-blue-400';
+                    icon = 'fa-info-circle';
+            }
+            
+            toast.className = `toast ${bgColor} ${borderColor} border-l-4 rounded-r-lg px-4 py-3 shadow-lg backdrop-blur-sm flex items-start`;
+            toast.innerHTML = `
+                <i class="fas ${icon} mr-3 mt-1 text-${type === 'warning' ? 'yellow' : type}-400"></i>
+                <div class="flex-1">${message}</div>
+                <button class="ml-2 text-gray-300 hover:text-white" onclick="this.parentElement.classList.add('hide'); setTimeout(() => this.parentElement.remove(), 300)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto-remove toast after duration
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.classList.add('hide');
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+            
+            return toast;
+        }
+
+        // Toggle password visibility
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.querySelector('#password + button i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                showToast('Password is now visible', 'info', 2000);
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            }
+        }
+
+        // Form submission handler
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const errorElement = document.getElementById('error-message');
+            errorElement.classList.add('hidden');
+            
+            // Show loading toast
+            const loadingToast = showToast('Creating your account...', 'info', 0);
+            
+            try {
+                const response = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password
+                    })
+                });
+                
+                const data = await response.json();
+                console.log(data);
+                
+                if (!response.ok) {
+                    throw new Error(data.message || "Registration failed");
+                }
+                
+                // Remove loading toast
+                loadingToast.classList.add('hide');
+                setTimeout(() => loadingToast.remove(), 300);
+                
+                // Show success toast
+                showToast('Account created successfully! Redirecting...', 'success');
+                
+                localStorage.setItem("token", data.token);
+                
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = "/auth/login"; 
+                }, 1500);
+                
+            } catch (err) {
+                console.error(err);
+                
+                // Remove loading toast
+                loadingToast.classList.add('hide');
+                setTimeout(() => loadingToast.remove(), 300);
+                
+                // Show error toast
+                showToast(err.message || "Registration failed. Please try again.", 'error');
+                
+                errorElement.textContent = err.message;
+                errorElement.classList.remove('hidden');
+                
+                // Add shake animation to form
+                const form = document.getElementById('register-form');
+                form.classList.add('animate-shake');
+                setTimeout(() => {
+                    form.classList.remove('animate-shake');
+                }, 500);
+            }
+        });
+
+        // Add shake animation style dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+            .animate-shake {
+                animation: shake 0.5s ease-in-out;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Demo toast on page load (can be removed)
+        setTimeout(() => {
+            showToast('Welcome to our registration page!', 'info');
+        }, 1000);
+    </script>
+</body>
+</html>

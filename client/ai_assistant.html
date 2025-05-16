@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon AI Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --neon-blue: #08f;
+            --neon-purple: #a0f;
+            --neon-pink: #f0f;
+            --neon-green: #0f8;
+            --neon-yellow: #ff0;
+            --neon-orange: #f80;
+            --neon-red: #f44;
+        }
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #0a0a12;
+            color: #e0e0e0;
+            transition: all 0.3s;
+            overscroll-behavior-y: contain;
+        }
+        
+        .neon-text-blue {
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+            color: var(--neon-blue);
+        }
+        
+        .neon-text-purple {
+            text-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple);
+            color: var(--neon-purple);
+        }
+        
+        .neon-text-pink {
+            text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        
+        .neon-text-green {
+            text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green);
+            color: var(--neon-green);
+        }
+        
+        .neon-text-yellow {
+            text-shadow: 0 0 5px var(--neon-yellow), 0 0 10px var(--neon-yellow);
+            color: var(--neon-yellow);
+        }
+        
+        .neon-text-orange {
+            text-shadow: 0 0 5px var(--neon-orange), 0 0 10px var(--neon-orange);
+            color: var(--neon-orange);
+        }
+        
+        .neon-text-red {
+            text-shadow: 0 0 5px var(--neon-red), 0 0 10px var(--neon-red);
+            color: var(--neon-red);
+        }
+        
+        .neon-border-blue {
+            box-shadow: 0 0 10px var(--neon-blue), inset 0 0 10px var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+        }
+        
+        .neon-border-purple {
+            box-shadow: 0 0 10px var(--neon-purple), inset 0 0 10px var(--neon-purple);
+            border: 1px solid var(--neon-purple);
+        }
+        
+        .neon-border-pink {
+            box-shadow: 0 0 10px var(--neon-pink), inset 0 0 10px var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+        }
+        
+        .neon-border-green {
+            box-shadow: 0 0 10px var(--neon-green), inset 0 0 10px var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+        
+        .neon-border-orange {
+            box-shadow: 0 0 10px var(--neon-orange), inset 0 0 10px var(--neon-orange);
+            border: 1px solid var(--neon-orange);
+        }
+        
+        .neon-glow-blue {
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .neon-glow-purple {
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+        
+        .neon-glow-pink {
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        
+        .neon-glow-green {
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        
+        .neon-glow-orange {
+            box-shadow: 0 0 15px var(--neon-orange);
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 24px;
+            background: var(--neon-green);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        .loading-dots::after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        
+        .message-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        
+        .message-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+        
+        .wave {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20px;
+        }
+        
+        .wave span {
+            display: inline-block;
+            width: 4px;
+            height: 10px;
+            margin: 0 2px;
+            background: var(--neon-green);
+            animation: wave 1.2s infinite ease-in-out;
+        }
+        
+        .wave span:nth-child(2) {
+            animation-delay: -1.1s;
+        }
+        
+        .wave span:nth-child(3) {
+            animation-delay: -1.0s;
+        }
+        
+        .wave span:nth-child(4) {
+            animation-delay: -0.9s;
+        }
+        
+        .wave span:nth-child(5) {
+            animation-delay: -0.8s;
+        }
+        
+        @keyframes wave {
+            0%, 40%, 100% { transform: scaleY(0.4); } 
+            20% { transform: scaleY(1); }
+        }
+
+        /* Code block styling */
+        .code-block {
+            background-color: #1a1a2e;
+            border-left: 3px solid var(--neon-purple);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        
+        /* Alert boxes */
+        .alert-info {
+            background-color: rgba(0, 136, 255, 0.1);
+            border-left: 3px solid var(--neon-blue);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 196, 0, 0.1);
+            border-left: 3px solid var(--neon-yellow);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .alert-danger {
+            background-color: rgba(255, 0, 0, 0.1);
+            border-left: 3px solid var(--neon-red);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .alert-success {
+            background-color: rgba(0, 255, 0, 0.1);
+            border-left: 3px solid var(--neon-green);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Table styles */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .comparison-table th {
+            background-color: #1a1a2e;
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid var(--neon-purple);
+        }
+        
+        .comparison-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #2d2d42;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:hover td {
+            background-color: #1e1e2e;
+        }
+        
+        /* Step-by-step guide styling */
+        .step-guide {
+            counter-reset: step-counter;
+            margin: 1rem 0;
+        }
+        
+        .step {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1.8rem;
+            height: 1.8rem;
+            background-color: #1a1a2e;
+            border: 2px solid var(--neon-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--neon-purple);
+        }
+        
+        /* Definition list styling */
+        .definition-list dt {
+            font-weight: bold;
+            color: var(--neon-blue);
+            margin-top: 0.5rem;
+        }
+        
+        .definition-list dd {
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid #2d2d42;
+        }
+        
+        /* Quote styling */
+        .neon-quote {
+            border-left: 3px solid var(--neon-green);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #b0b0b0;
+        }
+        
+        /* Horizontal rule */
+        .neon-hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(160, 0, 255, 0), rgba(160, 0, 255, 0.75), rgba(160, 0, 255, 0));
+            margin: 1.5rem 0;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header-icons {
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .action-buttons button {
+                flex-grow: 1;
+                min-width: 100px;
+                justify-content: center;
+            }
+            
+            .message {
+                max-width: 95% !important;
+                padding: 0.75rem;
+                margin-left: 0.5rem !important;
+                margin-right: 0.5rem !important;
+            }
+            
+            .user-avatar, .bot-avatar {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 0.8rem !important;
+            }
+            
+            #userInput {
+                padding-right: 3rem;
+                font-size: 0.9rem;
+            }
+            
+            #sendButton {
+                right: 0.75rem;
+                bottom: 0.75rem;
+                padding: 0.35rem;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            /* Adjust header for mobile */
+            header .container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            /* Make code blocks more readable on mobile */
+            .code-block pre {
+                font-size: 0.8rem;
+            }
+
+            /* Adjust avatar sizes in messages */
+            .message .flex-shrink-0 {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            /* Better spacing for action buttons */
+            .action-buttons {
+                padding: 0 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message {
+                max-width: 100% !important;
+                border-radius: 0.5rem !important;
+            }
+
+            #userInput {
+                border-radius: 0.5rem !important;
+            }
+
+            .action-buttons button {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+
+            /* Stack header elements on very small screens */
+            header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header-icons {
+                margin-top: 0.5rem;
+            }
+        }
+
+        /* Touch-friendly elements */
+        button, .action-buttons button {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Better input area for mobile */
+        #inputArea {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Hide scrollbar but keep functionality */
+        #chatContainer {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        #chatContainer::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* Better textarea resizing */
+        #userInput {
+            min-height: 60px;
+            max-height: 150px;
+        }
+
+        /* Storage indicator */
+        .storage-indicator {
+            position: fixed;
+            bottom: 60px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    
+    <!-- Header -->
+    <header class="py-3 neon-border-b border-b border-neon-blue">
+        <div class="container mx-auto px-4 flex justify-between items-center md:fixed">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold neon-text-purple font-orbitron">
+                <i class="fas fa-robot mr-2"></i>NEO<span class="neon-text-blue">AI</span>
+            </h1>
+            <div class="flex items-center space-x-2 sm:space-x-4 header-icons">
+                <button id="themeToggle" class="p-1 sm:p-2 rounded-full neon-border-blue hover:neon-glow-blue transition" aria-label="Toggle theme">
+                    <i class="fas fa-moon text-purple-300 text-sm sm:text-base"></i>
+                </button>
+                <button id="voiceToggle" class="p-1 sm:p-2 rounded-full neon-border-purple hover:neon-glow-purple transition" aria-label="Voice control">
+                    <i class="fas fa-microphone text-blue-300 text-sm sm:text-base"></i>
+                </button>
+                <button id="clearStorageBtn" class="p-1 sm:p-2 rounded-full neon-border-red hover:neon-glow-red transition hidden" aria-label="Clear storage">
+                    <i class="fas fa-database text-red-300 text-sm sm:text-base"></i>
+                </button>
+                 <div class="flex items-center ml-4">
+                       <button id="logout-btn" class="py-1 px-1 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300" onclick="logout()">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </button>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-2 sm:px-4 py-4 flex flex-col">
+        <!-- Chat Container -->
+        <div id="chatContainer" class="flex-grow mb-4 overflow-y-auto space-y-3">
+            <!-- Welcome Message will be loaded from storage or created if empty -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="mb-4" id="inputArea">
+            <div class="relative max-w-3xl mx-auto">
+                <textarea id="userInput" rows="2" class="w-full bg-gray-900 neon-border-blue rounded-lg p-3 pr-12 focus:outline-none focus:neon-glow-blue text-gray-200 resize-none" placeholder="Type your message here..." aria-label="Type your message"></textarea>
+                <button id="sendButton" class="absolute right-2 bottom-2 p-1 sm:p-2 rounded-full neon-border-blue hover:neon-glow-blue transition" aria-label="Send message">
+                    <i class="fas fa-paper-plane text-blue-300 text-sm sm:text-base"></i>
+                </button>
+            </div>
+            <div class="mt-2 flex justify-center space-x-2 sm:space-x-4 action-buttons">
+                <button id="audioBtn" class="px-3 py-1 sm:px-4 sm:py-2 rounded-lg neon-border-purple hover:neon-glow-purple transition flex items-center">
+                    <i class="fas fa-microphone mr-1 sm:mr-2 text-xs sm:text-sm"></i> <span class="text-xs sm:text-sm">Audio</span>
+                </button>
+                <button id="imageBtn" class="px-3 py-1 sm:px-4 sm:py-2 rounded-lg neon-border-pink hover:neon-glow-pink transition flex items-center">
+                    <i class="fas fa-image mr-1 sm:mr-2 text-xs sm:text-sm"></i> <span class="text-xs sm:text-sm">Image</span>
+                </button>
+                <button id="clearBtn" class="px-3 py-1 sm:px-4 sm:py-2 rounded-lg neon-border-blue hover:neon-glow-blue transition flex items-center">
+                    <i class="fas fa-trash-alt mr-1 sm:mr-2 text-xs sm:text-sm"></i> <span class="text-xs sm:text-sm">Clear</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-3 neon-border-t border-t border-neon-purple">
+        <div class="container mx-auto px-4 text-center text-gray-400 text-xs sm:text-sm">
+            <p>Powered by Pollinations.ai API | <span class="neon-text-blue">NEO</span><span class="neon-text-purple">AI</span> Assistant</p>
+        </div>
+    </footer>
+
+    <!-- Audio Player (hidden by default) -->
+    <audio id="audioPlayer" class="hidden"></audio>
+
+    <!-- Storage indicator -->
+    <div id="storageIndicator" class="storage-indicator neon-text-green">
+        Storage: <span id="storageUsage">0</span>%
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const audioBtn = document.getElementById('audioBtn');
+            const imageBtn = document.getElementById('imageBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const themeToggle = document.getElementById('themeToggle');
+            const voiceToggle = document.getElementById('voiceToggle');
+            const clearStorageBtn = document.getElementById('clearStorageBtn');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const storageIndicator = document.getElementById('storageIndicator');
+            const storageUsage = document.getElementById('storageUsage');
+            
+            // State
+            let useAudioResponse = false;
+            let useImageGeneration = false;
+            let isDarkMode = true;
+            let isSpeaking = false;
+            let speechRecognition = null;
+            
+            // Initialize the app
+            initApp();
+            
+            // Event Listeners
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            audioBtn.addEventListener('click', function() {
+                useAudioResponse = true;
+                sendMessage();
+            });
+            
+            imageBtn.addEventListener('click', function() {
+                useImageGeneration = true;
+                sendMessage();
+            });
+            
+            clearBtn.addEventListener('click', clearChat);
+            clearStorageBtn.addEventListener('click', clearLocalStorage);
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            voiceToggle.addEventListener('click', toggleVoiceControl);
+            
+            // Adjust textarea height dynamically
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Functions
+            function initApp() {
+                // Check for saved theme preference
+                const savedTheme = localStorage.getItem('neoai-theme');
+                if (savedTheme === 'light') {
+                    toggleTheme();
+                }
+                
+                // Load chat history from localStorage
+                loadChatHistory();
+                
+                // Check if we need to show the welcome message
+                if (chatContainer.children.length === 0) {
+                    showWelcomeMessage();
+                }
+                
+                // Update storage indicator
+                updateStorageIndicator();
+                
+                // Show clear storage button if there's data
+                if (localStorage.getItem('neoai-messages')) {
+                    clearStorageBtn.classList.remove('hidden');
+                }
+            }
+            
+            function showWelcomeMessage() {
+                const welcomeMessage = {
+                    role: 'assistant',
+                    content: `
+                        <p><strong class="neon-text-blue">Welcome to your advanced AI assistant!</strong></p>
+                        <p class="mt-2"><span class="neon-text-green">•</span> I can generate <span class="neon-text-yellow">text</span>, <span class="neon-text-pink">audio</span>, and <span class="neon-text-blue">images</span></p>
+                        <p><span class="neon-text-green">•</span> My responses feature <strong class="neon-text-purple">rich formatting</strong> with:</p>
+                        <p class="ml-4"><span class="neon-text-green">•</span> <span class="neon-text-purple">Headings</span> and <span class="neon-text-blue">subheadings</span></p>
+                        <p class="ml-4"><span class="neon-text-green">•</span> <span class="neon-text-yellow">Bullet points</span> and <span class="neon-text-pink">numbered lists</span></p>
+                        <p class="ml-4"><span class="neon-text-green">•</span> <span class="neon-text-green">Code blocks</span> with syntax highlighting</p>
+                        <p class="ml-4"><span class="neon-text-green">•</span> Interactive <span class="neon-text-orange">comparison tables</span></p>
+                        <p class="ml-4"><span class="neon-text-green">•</span> <span class="neon-text-blue">Step-by-step</span> guides</p>
+                        <p class="ml-4"><span class="neon-text-green">•</span> <span class="neon-text-red">Warning</span> and <span class="neon-text-green">info</span> boxes</p>
+                        <p class="mt-2"><strong class="neon-text-pink">Try asking:</strong></p>
+                        <p class="ml-4 neon-text-yellow">"Explain Java programming"</p>
+                        <p class="ml-4 neon-text-blue">"Compare Python and JavaScript"</p>
+                        <p class="ml-4 neon-text-green">"Show me how to make an HTTP request in JavaScript"</p>
+                    `,
+                    timestamp: Date.now(),
+                    isHtml: true
+                };
+                
+                addMessageElement(welcomeMessage, true);
+                saveMessageToStorage(welcomeMessage);
+            }
+            
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (!message) return;
+                
+                // Add user message to chat
+                const userMessage = {
+                    role: 'user',
+                    content: message,
+                    timestamp: Date.now()
+                };
+                addMessageElement(userMessage);
+                saveMessageToStorage(userMessage);
+                
+                userInput.value = '';
+                userInput.style.height = 'auto';
+                
+                // Show loading indicator
+                const loadingId = addLoadingIndicator();
+                
+                // Determine which API to use
+                if (useImageGeneration) {
+                    generateImage(message, loadingId);
+                } else if (useAudioResponse) {
+                    generateAudio(message, loadingId);
+                } else {
+                    generateText(message, loadingId);
+                }
+                
+                // Reset flags
+                useAudioResponse = false;
+                useImageGeneration = false;
+            }
+            
+            function generateText(message, loadingId) {
+                // Show "thinking" message immediately
+                const thinkingMessage = {
+                    role: 'assistant',
+                    content: 'Let me think about that...',
+                    timestamp: Date.now(),
+                    isThinking: true
+                };
+                addMessageElement(thinkingMessage);
+                
+                fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(message)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.text();
+                    })
+                    .then(text => {
+                        removeLoadingIndicator(loadingId);
+                        
+                        // Remove the thinking message
+                        const thinkingElements = document.querySelectorAll('.thinking-message');
+                        thinkingElements.forEach(el => el.remove());
+                        
+                        const formattedText = formatResponseText(text);
+                        const assistantMessage = {
+                            role: 'assistant',
+                            content: formattedText,
+                            timestamp: Date.now(),
+                            isHtml: true
+                        };
+                        addMessageElement(assistantMessage);
+                        saveMessageToStorage(assistantMessage);
+                    })
+                    .catch(error => {
+                        removeLoadingIndicator(loadingId);
+                        
+                        // Remove the thinking message
+                        const thinkingElements = document.querySelectorAll('.thinking-message');
+                        thinkingElements.forEach(el => el.remove());
+                        
+                        const errorMessage = {
+                            role: 'assistant',
+                            content: `Sorry, I encountered an error: ${error.message}`,
+                            timestamp: Date.now()
+                        };
+                        addMessageElement(errorMessage);
+                        saveMessageToStorage(errorMessage);
+                        console.error('Error:', error);
+                    });
+            }
+            
+            function formatResponseText(text) {
+                // First check if this is a comparison that should be a table
+                if (shouldBeTable(text)) {
+                    return formatAsTable(text);
+                }
+                
+                // Process markdown-like formatting
+                let formattedText = text
+                    // Headers (lines ending with :)
+                    .replace(/^(.*?:)\s*$/gm, '<strong class="neon-text-purple">$1</strong>')
+                    
+                    // Bullet points (lines starting with - or *)
+                    .replace(/^(\s*[-*]\s+)(.*)$/gm, '<span class="neon-text-green">•</span> <span class="text-gray-200">$2</span>')
+                    
+                    // Numbered lists
+                    .replace(/^(\s*\d+\.\s+)(.*)$/gm, '<span class="neon-text-yellow">$1</span> <span class="text-gray-200">$2</span>')
+                    
+                    // Strong emphasis (**text**)
+                    .replace(/\*\*(.*?)\*\*/g, '<span class="neon-text-yellow">$1</span>')
+                    
+                    // Emphasis (*text* or _text_)
+                    .replace(/\*([^*]+)\*/g, '<em class="neon-text-blue">$1</em>')
+                    .replace(/_([^_]+)_/g, '<em class="neon-text-blue">$1</em>')
+                    
+                    // Code blocks (```code```)
+                    .replace(/```([^`]+)```/g, '<div class="code-block"><pre>$1</pre></div>')
+                    
+                    // Inline code (`code`)
+                    .replace(/`([^`]+)`/g, '<code class="bg-gray-800 px-1 py-0.5 rounded">$1</code>')
+                    
+                    // Links
+                    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="neon-text-blue hover:underline" target="_blank">$1</a>')
+                    
+                    // Horizontal rules
+                    .replace(/^\s*---\s*$/gm, '<div class="neon-hr my-3"></div>')
+                    
+                    // Blockquotes
+                    .replace(/^>\s*(.*)$/gm, '<div class="neon-quote">$1</div>')
+                    
+                    // Preserve line breaks
+                    .replace(/\n/g, '<br>');
+                
+                return formattedText;
+            }
+            
+            function shouldBeTable(text) {
+                const tableIndicators = [' vs ', '|', 'comparison', 'differences between', 'pros and cons'];
+                return tableIndicators.some(indicator => text.toLowerCase().includes(indicator));
+            }
+            
+            function formatAsTable(text) {
+                const lines = text.split('\n').filter(line => line.trim().length > 0);
+                let tableHtml = '<div class="overflow-x-auto my-2"><table class="comparison-table neon-border-purple">';
+                
+                // Try to detect headers
+                if (lines[0].includes('|') && lines[1].includes('-')) {
+                    // Markdown table format
+                    const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
+                    tableHtml += '<thead><tr>';
+                    headers.forEach(header => {
+                        tableHtml += `<th class="neon-text-blue">${header}</th>`;
+                    });
+                    tableHtml += '</tr></thead><tbody>';
+                    
+                    for (let i = 2; i < lines.length; i++) {
+                        if (lines[i].includes('|')) {
+                            const cells = lines[i].split('|').map(c => c.trim()).filter(c => c);
+                            tableHtml += '<tr>';
+                            cells.forEach((cell, idx) => {
+                                const cellClass = idx === 0 ? 'neon-text-green' : 'text-gray-200';
+                                tableHtml += `<td class="${cellClass}">${cell}</td>`;
+                            });
+                            tableHtml += '</tr>';
+                        }
+                    }
+                } else {
+                    // Regular text comparison
+                    tableHtml += `
+                        <thead>
+                            <tr>
+                                <th class="neon-text-blue">Feature</th>
+                                <th class="neon-text-blue">Option 1</th>
+                                <th class="neon-text-blue">Option 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+                    
+                    lines.forEach(line => {
+                        if (line.includes(' vs ') || line.includes(':')) {
+                            const [feature, ...options] = line.split(/:| vs /);
+                            if (feature && options.length > 0) {
+                                tableHtml += `
+                                    <tr>
+                                        <td class="neon-text-green">${feature.trim()}</td>
+                                        <td class="text-gray-200">${options[0].trim()}</td>
+                                        <td class="text-gray-200">${options[1] ? options[1].trim() : ''}</td>
+                                    </tr>
+                                `;
+                            }
+                        }
+                    });
+                }
+                
+                tableHtml += '</tbody></table></div>';
+                return tableHtml;
+            }
+            
+            function generateAudio(message, loadingId) {
+                const voice = 'alloy'; // Can be changed to 'echo', 'fable', 'onyx', 'nova', 'shimmer'
+                fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(message)}?model=openai-audio&voice=${voice}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        removeLoadingIndicator(loadingId);
+                        
+                        // Convert blob to base64 for storage
+                        const reader = new FileReader();
+                        reader.onloadend = function() {
+                            const base64data = reader.result;
+                            const audioMessage = {
+                                role: 'assistant',
+                                content: `Audio response for: "${message}"`,
+                                audio: base64data,
+                                timestamp: Date.now()
+                            };
+                            addMessageElement(audioMessage);
+                            saveMessageToStorage(audioMessage);
+                            
+                            // Play the audio
+                            audioPlayer.src = base64data;
+                            audioPlayer.play();
+                        };
+                        reader.readAsDataURL(blob);
+                    })
+                    .catch(error => {
+                        removeLoadingIndicator(loadingId);
+                        const errorMessage = {
+                            role: 'assistant',
+                            content: `Sorry, I couldn't generate audio: ${error.message}`,
+                            timestamp: Date.now()
+                        };
+                        addMessageElement(errorMessage);
+                        saveMessageToStorage(errorMessage);
+                        console.error('Error:', error);
+                    });
+            }
+            
+            function generateImage(message, loadingId) {
+                const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(message)}`;
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                
+                img.onload = function() {
+                    removeLoadingIndicator(loadingId);
+                    
+                    // Convert image to base64 for storage
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    const imageMessage = {
+                        role: 'assistant',
+                        content: `Generated image for: "${message}"`,
+                        image: imageDataUrl,
+                        timestamp: Date.now()
+                    };
+                    addMessageElement(imageMessage);
+                    saveMessageToStorage(imageMessage);
+                };
+                
+                img.onerror = function() {
+                    removeLoadingIndicator(loadingId);
+                    const errorMessage = {
+                        role: 'assistant',
+                        content: "Sorry, I couldn't generate an image for that prompt.",
+                        timestamp: Date.now()
+                    };
+                    addMessageElement(errorMessage);
+                    saveMessageToStorage(errorMessage);
+                };
+                
+                img.src = imageUrl;
+            }
+            
+            function addMessageElement(messageData, skipAnimation = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${messageData.role === 'user' ? 'neon-border-blue' : 'neon-border-purple'} rounded-lg p-3 max-w-3xl mx-auto ${messageData.role === 'user' ? 'ml-auto neon-glow-blue' : 'mr-auto neon-glow-purple'}`;
+                
+                // Add timestamp as data attribute
+                messageDiv.dataset.timestamp = messageData.timestamp;
+                
+                // Add thinking class if this is a thinking message
+                if (messageData.isThinking) {
+                    messageDiv.classList.add('thinking-message');
+                }
+                
+                let messageContent = '';
+                
+                if (messageData.audio) {
+                    messageContent = `
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-900 neon-border-purple flex items-center justify-center mr-3 bot-avatar">
+                                <i class="fas fa-robot text-purple-300"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold neon-text-purple">NEO AI</p>
+                                <div class="mt-2 flex items-center">
+                                    <button onclick="window.playAudioMessage('${messageData.timestamp}')" class="p-2 rounded-full neon-border-purple hover:neon-glow-purple mr-2">
+                                        <i class="fas fa-play text-purple-300"></i>
+                                    </button>
+                                    <span class="text-gray-300">${messageData.content}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (messageData.image) {
+                    messageContent = `
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-pink-900 neon-border-pink flex items-center justify-center mr-3 bot-avatar">
+                                <i class="fas fa-robot text-pink-300"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold neon-text-pink">NEO AI</p>
+                                <p class="mt-1 text-gray-200 mb-2">${messageData.content}</p>
+                                <div class="mt-2 rounded-lg overflow-hidden">
+                                    <img src="${messageData.image}" alt="Generated image" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div class="mt-2 flex justify-end">
+                                    <a href="${messageData.image}" download="ai-image-${messageData.timestamp}.jpg" class="px-3 py-1 text-sm rounded neon-border-pink hover:neon-glow-pink transition">
+                                        <i class="fas fa-download mr-1"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    messageContent = `
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-10 w-10 rounded-full ${messageData.role === 'user' ? 'bg-blue-900 neon-border-blue' : 'bg-purple-900 neon-border-purple'} flex items-center justify-center mr-3 ${messageData.role === 'user' ? 'user-avatar' : 'bot-avatar'}">
+                                <i class="${messageData.role === 'user' ? 'fas fa-user text-blue-300' : 'fas fa-robot text-purple-300'}"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold ${messageData.role === 'user' ? 'neon-text-blue' : 'neon-text-purple'}">${messageData.role === 'user' ? 'You' : 'NEO AI'}</p>
+                                <div class="mt-1 text-gray-200 ${messageData.isHtml ? '' : 'whitespace-pre-wrap'}">${messageData.isHtml ? messageData.content : escapeHtml(messageData.content)}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                messageDiv.innerHTML = messageContent;
+                
+                if (!skipAnimation) {
+                    messageDiv.style.opacity = 0;
+                    messageDiv.style.transform = 'translateY(10px)';
+                }
+                
+                chatContainer.appendChild(messageDiv);
+                
+                if (!skipAnimation) {
+                    // Trigger animation
+                    setTimeout(() => {
+                        messageDiv.style.opacity = 1;
+                        messageDiv.style.transform = 'translateY(0)';
+                        messageDiv.style.transition = 'opacity 300ms, transform 300ms';
+                    }, 10);
+                }
+                
+                // Scroll to bottom
+                setTimeout(() => {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 50);
+            }
+            
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            function addLoadingIndicator() {
+                const id = 'loading-' + Date.now();
+                const loadingDiv = document.createElement('div');
+                loadingDiv.id = id;
+                loadingDiv.className = 'message neon-border-purple rounded-lg p-3 max-w-3xl mx-auto mr-auto neon-glow-purple';
+                
+                loadingDiv.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-900 neon-border-purple flex items-center justify-center mr-3 bot-avatar">
+                            <i class="fas fa-robot text-purple-300"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold neon-text-purple">NEO AI</p>
+                            <div class="mt-1 text-gray-200 flex items-center">
+                                <div class="wave mr-2">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <span>Thinking</span>
+                                <span class="loading-dots"></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                chatContainer.appendChild(loadingDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                return id;
+            }
+            
+            function removeLoadingIndicator(id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.opacity = 1;
+                    element.style.transition = 'opacity 300ms';
+                    element.style.opacity = 0;
+                    
+                    setTimeout(() => {
+                        element.remove();
+                    }, 300);
+                }
+            }
+            
+            function clearChat() {
+                // Keep only the welcome message (if it exists)
+                const welcomeMessage = document.querySelector('.message:first-child');
+                
+                // Remove all messages
+                while (chatContainer.firstChild) {
+                    chatContainer.removeChild(chatContainer.firstChild);
+                }
+                
+                // Restore welcome message if it existed
+                if (welcomeMessage) {
+                    chatContainer.appendChild(welcomeMessage);
+                } else {
+                    showWelcomeMessage();
+                }
+                
+                // Clear messages from storage but keep the welcome message
+                const welcomeMessageData = {
+                    role: 'assistant',
+                    content: document.querySelector('.message:first-child').innerHTML,
+                    timestamp: Date.now(),
+                    isHtml: true
+                };
+                localStorage.setItem('neoai-messages', JSON.stringify([welcomeMessageData]));
+                
+                updateStorageIndicator();
+            }
+            
+            function toggleTheme() {
+                isDarkMode = !isDarkMode;
+                document.documentElement.classList.toggle('dark', isDarkMode);
+                localStorage.setItem('neoai-theme', isDarkMode ? 'dark' : 'light');
+                
+                const icon = themeToggle.querySelector('i');
+                if (isDarkMode) {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    icon.classList.remove('text-yellow-300');
+                    icon.classList.add('text-purple-300');
+                } else {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    icon.classList.remove('text-purple-300');
+                    icon.classList.add('text-yellow-300');
+                }
+            }
+            
+            function toggleVoiceControl() {
+                if (isSpeaking) {
+                    stopVoiceControl();
+                    return;
+                }
+                
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    speechRecognition = new SpeechRecognition();
+                    speechRecognition.continuous = false;
+                    speechRecognition.interimResults = false;
+                    
+                    speechRecognition.onstart = function() {
+                        isSpeaking = true;
+                        voiceToggle.querySelector('i').classList.add('text-red-300');
+                        voiceToggle.querySelector('i').classList.remove('text-blue-300');
+                        addMessageElement({
+                            role: 'assistant',
+                            content: 'Listening... Speak now.',
+                            timestamp: Date.now()
+                        });
+                    };
+                    
+                    speechRecognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        userInput.value = transcript;
+                        isSpeaking = false;
+                        voiceToggle.querySelector('i').classList.remove('text-red-300');
+                        voiceToggle.querySelector('i').classList.add('text-blue-300');
+                        sendMessage();
+                    };
+                    
+                    speechRecognition.onerror = function(event) {
+                        isSpeaking = false;
+                        voiceToggle.querySelector('i').classList.remove('text-red-300');
+                        voiceToggle.querySelector('i').classList.add('text-blue-300');
+                        addMessageElement({
+                            role: 'assistant',
+                            content: 'Voice recognition error: ' + event.error,
+                            timestamp: Date.now()
+                        });
+                    };
+                    
+                    speechRecognition.onend = function() {
+                        if (isSpeaking) {
+                            isSpeaking = false;
+                            voiceToggle.querySelector('i').classList.remove('text-red-300');
+                            voiceToggle.querySelector('i').classList.add('text-blue-300');
+                        }
+                    };
+                    
+                    speechRecognition.start();
+                } else {
+                    addMessageElement({
+                        role: 'assistant',
+                        content: 'Your browser does not support speech recognition.',
+                        timestamp: Date.now()
+                    });
+                }
+            }
+            
+            function stopVoiceControl() {
+                if (speechRecognition) {
+                    speechRecognition.stop();
+                }
+                isSpeaking = false;
+                voiceToggle.querySelector('i').classList.remove('text-red-300');
+                voiceToggle.querySelector('i').classList.add('text-blue-300');
+            }
+            
+            function saveMessageToStorage(message) {
+                let messages = JSON.parse(localStorage.getItem('neoai-messages')) || [];
+                
+                // Don't save loading indicators or thinking messages
+                if (message.isThinking) return;
+                
+                // Check if this is an update to an existing message
+                const existingIndex = messages.findIndex(m => m.timestamp === message.timestamp);
+                if (existingIndex >= 0) {
+                    messages[existingIndex] = message;
+                } else {
+                    messages.push(message);
+                }
+                
+                // Limit the number of stored messages to prevent excessive storage usage
+                if (messages.length > 50) {
+                    messages = messages.slice(-50);
+                }
+                
+                localStorage.setItem('neoai-messages', JSON.stringify(messages));
+                updateStorageIndicator();
+                
+                // Show clear storage button if we haven't already
+                clearStorageBtn.classList.remove('hidden');
+            }
+            
+            function loadChatHistory() {
+                const messages = JSON.parse(localStorage.getItem('neoai-messages')) || [];
+                
+                // If no messages, we'll show the welcome message
+                if (messages.length === 0) return;
+                
+                messages.forEach(message => {
+                    addMessageElement(message, true);
+                });
+                
+                // Scroll to bottom after loading
+                setTimeout(() => {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 100);
+            }
+            
+            function clearLocalStorage() {
+                if (confirm('Are you sure you want to clear all chat history and stored data?')) {
+                    localStorage.removeItem('neoai-messages');
+                    localStorage.removeItem('neoai-theme');
+                    clearChat();
+                    clearStorageBtn.classList.add('hidden');
+                    updateStorageIndicator();
+                    
+                    // Show temporary confirmation
+                    storageIndicator.textContent = 'Storage cleared!';
+                    storageIndicator.classList.remove('neon-text-green');
+                    storageIndicator.classList.add('neon-text-red');
+                    storageIndicator.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        storageIndicator.style.display = 'none';
+                        storageIndicator.classList.remove('neon-text-red');
+                        storageIndicator.classList.add('neon-text-green');
+                        storageIndicator.innerHTML = 'Storage: <span id="storageUsage">0</span>%';
+                    }, 2000);
+                }
+            }
+            
+            function updateStorageIndicator() {
+                // Calculate storage usage
+                let total = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const value = localStorage.getItem(key);
+                    total += key.length + value.length;
+                }
+                
+                // Convert to KB and calculate percentage (assuming 5MB limit)
+                const totalKB = total / 1024;
+                const percentage = Math.min(Math.round((totalKB / (5 * 1024)) * 100), 100);
+                
+                storageUsage.textContent = percentage;
+                
+                // Show warning if storage is getting full
+                if (percentage > 80) {
+                    storageIndicator.classList.remove('neon-text-green');
+                    storageIndicator.classList.add('neon-text-red');
+                } else if (percentage > 50) {
+                    storageIndicator.classList.remove('neon-text-green');
+                    storageIndicator.classList.add('neon-text-yellow');
+                } else {
+                    storageIndicator.classList.remove('neon-text-red', 'neon-text-yellow');
+                    storageIndicator.classList.add('neon-text-green');
+                }
+                
+                // Show the indicator briefly when it updates
+                if (percentage > 0) {
+                    storageIndicator.style.display = 'block';
+                    setTimeout(() => {
+                        storageIndicator.style.display = 'none';
+                    }, 2000);
+                }
+            }
+            
+            // Make functions available globally
+            window.playAudioMessage = function(timestamp) {
+                const messages = JSON.parse(localStorage.getItem('neoai-messages')) || [];
+                const message = messages.find(m => m.timestamp == timestamp);
+                
+                if (message && message.audio) {
+                    audioPlayer.src = message.audio;
+                    audioPlayer.play();
+                }
+            };
+            
+            // Initialize storage indicator
+            updateStorageIndicator();
+            
+            // Show storage indicator on hover over clear storage button
+            clearStorageBtn.addEventListener('mouseenter', () => {
+                storageIndicator.style.display = 'block';
+            });
+            
+            clearStorageBtn.addEventListener('mouseleave', () => {
+                storageIndicator.style.display = 'none';
+            });
+            
+            // Touch events for mobile
+            clearStorageBtn.addEventListener('touchstart', () => {
+                storageIndicator.style.display = 'block';
+            });
+            
+            clearStorageBtn.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    storageIndicator.style.display = 'none';
+                }, 2000);
+            });
+        });
+    </script>
+    <script src="./static/js/auth.js"></script>
+</body>
+</html>
